@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Scoopcom Wireless — Phones & Tablets</title>
+  <meta name="description" content="Scoopcom Wireless — Latest phones and tablets. Shop new devices, compare specs, and checkout securely." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:#007BFF;--accent:#00C2A8;--bg:#fafafa;--card:#fff;--text:#1e1e1e;
+      --muted:#6b7280;--radius:12px;--shadow:0 6px 20px rgba(16,24,40,.08);--max-width:1200px;--gap:20px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text)}
+    a{text-decoration:none;color:inherit} img{max-width:100%;display:block}
+    .container{max-width:var(--max-width);margin:auto;padding:20px; height: auto;}
+    header.site-header{background:burlywood;border-bottom:1px solid #efefef;position:sticky;top:0;z-index:99}
+    .nav{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700}
+    .brand .logo{width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#3aa0ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    nav.links{display:flex;gap:16px;align-items:center}
+    nav.links a{color:var(--muted);font-weight:600}
+    .cta-btn{background:var(--primary);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;border:0;cursor:pointer}
+    .icon-btn{background:none;border:0;cursor:pointer;font-size:18px}
+    .hero{padding:60px 0;background:linear-gradient(180deg,rgba(0,123,255,0.05),transparent)}
+    .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:30px;align-items:center}
+    .hero h1{font-size:clamp(28px,4vw,44px);margin:0}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+    .card{background:var(--card);border-radius:10px;padding:12px;box-shadow:var(--shadow)}
+    .product-thumb{height:200px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden}
+    .product-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+    .price{color:var(--primary);font-weight:700}
+    .specs{font-size:14px;color:var(--muted);margin-top:6px;}
+    .cart-drawer{position:fixed;right:20px;top:80px;width:360px;background:#fff;border-radius:12px;padding:14px;box-shadow:0 20px 45px rgba(2,6,23,.2);z-index:200;display:none;max-height:80vh;overflow-y:auto;}
+    footer{background:burlywood;color:black;padding:10px 0;margin-top:40px;text-align: center;bottom: 0;width: 100%;}
+    /* Admin */
+    #admin {padding:40px 20px;display:none}
+    #product-form{display:grid;gap:10px;max-width:400px}
+    #admin-products{margin-top:20px}
+    #admin-products .admin-item{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:8px;border-radius:8px;box-shadow:var(--shadow);margin-bottom:8px}
+    /* Checkout */
+    #checkout {padding:40px 20px;display:none}
+    #checkout-form {display:grid;gap:10px;max-width:400px;margin:auto}
+    #checkout-summary {margin-top:20px;background:#fff;padding:16px;border-radius:10px;box-shadow:var(--shadow)}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <div class="brand"><div class="logo">S</div><span>Scoopcom Wireless</span></div>
+      <nav class="links">
+        <a href="#home" data-route>Home</a>
+        <a href="#shop" data-route>Shop</a>
+        <a href="#about" data-route>About</a>
+        <a href="#contact" data-route>Contact</a>
+        <a href="#admin" data-route>Admin</a>
+        <a href="#checkout" data-route>Checkout</a>
+        <button class="cta-btn" data-route data-route-to="#shop">Shop Now</button>
+        <button class="icon-btn" id="cart-toggle">🛒 <span id="cart-count">0</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app">
+    <section class="hero container" id="home">
+      <div class="hero-grid">
+        <div>
+          <h1>Your Trusted Mobile Phone Store</h1>
+          <p>Explore our wide range of smartphones from budget friendly to flagship devices</p>
+          <button class="cta-btn" data-route data-route-to="#shop">Shop Now</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="shop">
+      <h2>Shop</h2>
+      <div id="products" class="products-grid"></div>
+    </section>
+
+    <section id="about" class="container">
+      <h2>About Us</h2>
+      <p>At Scoopcom Wireless, we specialise in offering high-quality smartphones and tablets at competitive prices.</p>
+    </section>
+
+    <section id="contact" class="container">
+      <h2>Contact</h2>
+      <p>Email: support@scoopcomwireless.com</p>
+      <p>Phone: 0707079042</p>
+    </section>
+    
+    <section id="admin" class="container">
+      <h2>Admin Dashboard</h2>
+      <form id="product-form">
+        <input type="text" id="p-title" placeholder="Product Title" required>
+        <input type="text" id="p-category" placeholder="Category (Phones/Tablets)" required>
+        <input type="number" id="p-price" placeholder="Price" required>
+        <input type="url" id="p-image" placeholder="Image URL" required>
+        <textarea id="p-specs" placeholder="Enter product specifications (e.g. 6.1'' Display, 128GB, 5G)" required></textarea>
+        <button type="submit" class="cta-btn">Add Product</button>
+      </form>
+      <div id="admin-products"></div>
+    </section>
+
+    <section id="checkout" class="container">
+      <h2>Checkout</h2>
+      <form id="checkout-form">
+        <input type="text" id="c-name" placeholder="Full Name" required>
+        <input type="email" id="c-email" placeholder="Email" required>
+        <input type="text" id="c-address" placeholder="Address" required>
+        <button type="submit" class="cta-btn">Place Order</button>
+      </form>
+      <div id="checkout-summary"></div>
+    </section>
+  </main>
+
+  <div id="cart" class="cart-drawer"></div>
+
+  <footer>
+    <p>© Scoopcom Wireless 2025</p>
+  </footer>
+
+  <script>
+    /************************
+     * Product Management
+     ************************/
+    let PRODUCTS = JSON.parse(localStorage.getItem("scoopcom_products")) || [
+      {
+        id:"iphone-15-lite",
+        title:"iPhone 15 Lite",
+        category:"Phones",
+        price:699,
+        specs:"6.1'' OLED Display, 128GB, A16 Bionic Chip",
+        images:["https://images.unsplash.com/photo-1541807084-5c52b6b63b18?q=80&w=1200"]
+      },
+      {
+        id:"galaxy-s24",
+        title:"Samsung Galaxy S24",
+        category:"Phones",
+        price:899,
+        specs:"6.2'' AMOLED, 256GB, 50MP Camera",
+        images:["https://images.unsplash.com/photo-1682685797751-0fbb2c7efb7d?q=80&w=1200"]
+      },
+      {
+        id:"pixel-8",
+        title:"Google Pixel 8",
+        category:"Phones",
+        price:749,
+        specs:"6.2'' Display, 128GB, Tensor G3 Processor",
+        images:["https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200"]
+      },
+      {
+        id:"ipad-air-5",
+        title:"iPad Air 5",
+        category:"Tablets",
+        price:599,
+        specs:"10.9'' Liquid Retina, M1 Chip, 64GB Storage",
+        images:["https://images.unsplash.com/photo-1556401995-2b5b1c9cf9d3?q=80&w=1200"]
+      }
+    ];
+    function saveProducts(){ localStorage.setItem("scoopcom_products",JSON.stringify(PRODUCTS)); }
+
+    /************************
+     * Cart (with persistence)
+     ************************/
+    let CART = JSON.parse(localStorage.getItem("scoopcom_cart")) || [];
+    function saveCart(){ localStorage.setItem("scoopcom_cart",JSON.stringify(CART)); }
+
+    function addToCart(id){
+      let product=PRODUCTS.find(p=>p.id===id);
+      CART.push(product);
+      saveCart();
+      updateCartCount();
+      renderCart();
+    }
+
+    function updateCartCount(){
+      document.getElementById("cart-count").innerText=CART.length;
+    }
+
+    function renderCart(){
+      const cart=document.getElementById("cart");
+      cart.innerHTML="<h3>Your Cart</h3>";
+      CART.forEach((item,i)=>{
+        let div=document.createElement("div");
+div.innerHTML=`<p><strong>${item.title}</strong> - sh${item.price}<br><small>${item.specs}</small> <button onclick="removeFromCart(${i})">❌</button></p>`;
+        cart.appendChild(div);
+      });
+      cart.innerHTML += `<button class="cta-btn" onclick="location.hash='#checkout'">Go to Checkout</button>`;
+      cart.style.display="block";
+    }
+
+    function removeFromCart(index){
+      CART.splice(index,1);
+      saveCart();
+      updateCartCount();
+      renderCart();
+    }
+
+    document.getElementById("cart-toggle").onclick=()=>{
+      let cart=document.getElementById("cart");
+      cart.style.display = cart.style.display === "block" ? "none" : "block";
+    };
+
+    /************************
+     * Render Products
+     ************************/
+    function renderProducts(){
+      const container=document.getElementById("products");
+      container.innerHTML="";
+      PRODUCTS.forEach(p=>{
+        let card=document.createElement("div");
+        card.className="card";
+        card.innerHTML=`
+          <div class="product-thumb"><img src="${p.images[0]}" alt="${p.title}"></div>
+          <h3>${p.title}</h3>
+          <div class="specs">${p.specs}</div>
+          <div class="product-meta"><span class="price">sh${p.price}</span>
+
+          <button class="cta-btn" onclick="addToCart('${p.id}')">Add to Cart</button></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /************************
+     * Admin Dashboard
+     ************************/
+    function renderAdmin(){
+      const list=document.getElementById("admin-products");
+      list.innerHTML="";
+      PRODUCTS.forEach((p,i)=>{
+        let row=document.createElement("div");
+        row.className="admin-item";
+        row.innerHTML=`<span>${p.title} - $${p.price} <br><small>${p.specs}</small></span> 
+        <button onclick="deleteProduct(${i})">❌ Delete</button>`;
+        list.appendChild(row);
+      });
+    }
+
+    document.getElementById("product-form").onsubmit=function(e){
+      e.preventDefault();
+      let title=document.getElementById("p-title").value;
+      let cat=document.getElementById("p-category").value;
+      let price=+document.getElementById("p-price").value;
+      let img=document.getElementById("p-image").value;
+      let specs=document.getElementById("p-specs").value;
+      PRODUCTS.push({id:title.toLowerCase().replace(/\s+/g,'-'),title,category:cat,price,images:[img],specs});
+      saveProducts(); renderProducts(); renderAdmin();
+      this.reset();
+    }
+
+    function deleteProduct(index){
+      PRODUCTS.splice(index,1);
+      saveProducts(); renderProducts(); renderAdmin();
+    }
+
+    /************************
+     * Password Protection
+     ************************/
+    window.addEventListener("hashchange",()=>{
+      if(location.hash==="#admin"){
+        let pass=prompt("Enter admin password:");
+        if(pass!=="admin123"){alert("Access denied!");location.hash="#home";}
+        else document.getElementById("admin").style.display="block";
+      }
+    });
+
+    /************************
+     * Checkout
+     ************************/
+    function renderCheckout(){
+      const summary=document.getElementById("checkout-summary");
+      summary.innerHTML="<h3>Order Summary</h3>";
+      let total=0;
+      CART.forEach(item=>{
+        summary.innerHTML+=`<p>${item.title} - sh${item.price}<br><small>${item.specs}</small></p>`;
+summary.innerHTML+=`<h4>Total: sh${total}</h4>`;
+      });
+
+    }
+
+    document.getElementById("checkout-form").onsubmit=function(e){
+      e.preventDefault();
+      let name=document.getElementById("c-name").value;
+      let email=document.getElementById("c-email").value;
+      let address=document.getElementById("c-address").value;
+
+      alert(`✅ Thank you, ${name}! Your order has been placed.\n\nConfirmation sent to ${email}.`);
+
+      CART=[]; saveCart(); updateCartCount(); renderCart();
+      document.getElementById("checkout-summary").innerHTML="";
+      this.reset();
+      location.hash="#home";
+    };
+
+    /************************
+     * Init
+     ************************/
+    renderProducts();
+    renderAdmin();
+    updateCartCount();
+    renderCheckout();
+
+    window.addEventListener("hashchange",()=>{
+      if(location.hash==="#checkout") renderCheckout();
+    });
+  </script>
+</body>
+</html>
